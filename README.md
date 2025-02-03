@@ -13,6 +13,6 @@ Often when developing embedded products, companies have little choice of common 
 4. build the project with `cd build` and `make`
 
 # Resources
-[Raspberry Pi C++ SDK](https://www.raspberrypi.com/documentation/microcontrollers/c_sdk.html)
-[FreeRTOS Kernel Documentation](https://www.freertos.org/Documentation/00-Overview)
-[Datasheet](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf)
+- [Raspberry Pi C++ SDK](https://www.raspberrypi.com/documentation/microcontrollers/c_sdk.html)
+- [FreeRTOS Kernel Documentation](https://www.freertos.org/Documentation/00-Overview)
+- [Datasheet](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf)
