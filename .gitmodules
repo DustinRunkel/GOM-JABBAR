@@ -1,3 +1,6 @@
-[submodule "FreeRTOS-Kernel"]
-	path = FreeRTOS-Kernel
+[submodule "device/FreeRTOS-Kernel"]
+	path = device/FreeRTOS-Kernel
 	url = https://github.com/FreeRTOS/FreeRTOS-Kernel.git
+[submodule "device/pico-sdk"]
+	path = device/pico-sdk
+	url = https://github.com/raspberrypi/pico-sdk
