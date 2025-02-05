@@ -7,10 +7,12 @@ Often when developing embedded products, companies have little choice of common 
 
 # Getting Started
 
-1. [Set up your build environment](https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf) (make sure to install the vscode extension)
-2. Pull down the kernel sub-module with `git submodule update --init --recursive` and `git submodule update --remote --recursive`
-3. configure the project with `cmake --build build`
-4. build the project with `cd build` and `make`
+1. Pull down the kernel sub-module with `git submodule update --init --recursive` and `git submodule update --remote --recursive`
+2. configure the project with `cmake -S . -B build/`
+3. build the project with `cmake --build build`
+
+These build instructions will not work right now, as we are not in a stable state. We will be adding our own application soon.
+
 
 # Resources
 - [Raspberry Pi C++ SDK](https://www.raspberrypi.com/documentation/microcontrollers/c_sdk.html)
