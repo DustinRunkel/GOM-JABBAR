@@ -134,8 +134,16 @@ int main()
     #ifdef PICO_DEFAULT_LED_PIN
     blink_pin_forever(pio, 0, offset, PICO_DEFAULT_LED_PIN, 3);
     #else
-    blink_pin_forever(pio, 0, offset, 6, 3);
+    blink_pin_forever(pio, 0, offset, 25, 3);
     #endif
+
+    //Some people bought the pico_w, the wifi enabled chip
+    //The led was re-wired to the cyw43
+    #ifdef RASPBERRYPI_PICO_W
+        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
+    #endif
+
+
     // For more pio examples see https://github.com/raspberrypi/pico-examples/tree/master/pio
 
     // Interpolator example code

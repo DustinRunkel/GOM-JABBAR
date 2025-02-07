@@ -6,11 +6,7 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-project(GOM-JABBAR
-        LANGUAGES C CXX ASM
-)
-
-# Initialise pico_sdk from installed location
+# Initialize pico_sdk from installed location
 set(ENV{PICO_SDK_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/pico-sdk")
 
 set(PICO_BOARD pico_w CACHE STRING "Board type")
@@ -18,14 +14,17 @@ set(PICO_BOARD pico_w CACHE STRING "Board type")
 #add_subdirectory(pico-sdk)
 
 #We are working with ARM-CORTEX-M0+ architecture
-set(FREERTOS_PORT "GCC_ARM_CM0")
+set(FREERTOS_PORT "GCC_ARM_CM0" )
 
 # Pull in Raspberry Pi Pico SDK (must be before project)
 include(pico_sdk_import.cmake)
 
+project(GOM-JABBAR
+        LANGUAGES C CXX ASM
+)
+
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
-
 #config values for the kernel, kernel is compiled with our application
 add_subdirectory(config)
 
