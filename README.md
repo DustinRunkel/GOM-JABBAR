@@ -28,11 +28,13 @@ Our device will be spewing data to the com port, so this is important. Apparentl
 ## Linux
 1. Use dmesg to find which `/dev` the device was assigned
    ![image](https://github.com/user-attachments/assets/fdde8f19-6f3a-4389-9196-bb58c26b9e0a)
+   
    As you can see, mine was assigned /dev/ttyACM0
-2. run `screen /dev/ttyACM0 115200` (you may need to sudo this)
-3. You should see the following output
+3. run `screen /dev/ttyACM0 115200` (you may need to sudo this)
+4. You should see the following output
+   
    ![image](https://github.com/user-attachments/assets/40a63734-34cf-4f4f-8993-675639782bff)
-4. crtl A + Z to exit
+5. crtl A + Z to exit
 
 ## Windows
 1. Install PuTTy
