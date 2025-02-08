@@ -11,7 +11,35 @@ Often when developing embedded products, companies have little choice of common 
 2. configure the project with `cmake -S . -B build/`
 3. build the project with `cmake --build build`
 
-These build instructions will not work right now, as we are not in a stable state. We will be adding our own application soon.
+# Flashing your device
+
+When you build the device project, a few binaries are generated. These binaries are provided for various boot modes of the device. We will focus on booting from flash, via a .uf2 file. This is the easiest way to get started, and requires us to not write custom bootloader code, as the nice people at raspberry pi have done this for us. 
+
+1. Connect your device via micro USB to any one of the USB ports on your machine
+2. Hold down the BOOTSEL button on the board
+3. The device is in mass storage mode, and ready to be flashed
+4. Drag and drop the .uf2 file onto the USB device
+5. It will take a second to reprogram itself, then issue a power-on-reset
+6. The device will boot into the entrypoint `main`
+
+# Reading the com port of your device
+Our device will be spewing data to the com port, so this is important. Apparently we are not outputing anything to COM on main yet, so to test this functionality you may need to use [this binary](https://datasheets.raspberrypi.com/soft/hello_world.uf2).
+
+## Linux
+1. Use dmesg to find which `/dev` the device was assigned
+   ![image](https://github.com/user-attachments/assets/fdde8f19-6f3a-4389-9196-bb58c26b9e0a)
+   As you can see, mine was assigned /dev/ttyACM0
+2. run `screen /dev/ttyACM0 115200` (you may need to sudo this)
+3. You should see the following output
+   ![image](https://github.com/user-attachments/assets/40a63734-34cf-4f4f-8993-675639782bff)
+4. crtl A + Z to exit
+
+## Windows
+1. Install PuTTy
+2. Find which com port the device is on in system/hardware devices
+3. Initalize a connection through PuTTy on the com port at baud 115200
+
+
 
 
 # Resources
