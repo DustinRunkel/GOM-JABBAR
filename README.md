@@ -1,5 +1,5 @@
 # GOM-JABBAR
-[![CMake on a single platform](https://github.com/DustinRunkel/GOM-JABBAR/actions/workflows/ubuntu-latest.yml/badge.svg)](https://github.com/DustinRunkel/GOM-JABBAR/actions/workflows/ubuntu-latest.yml)
+[![Ubuntu-latest](https://github.com/DustinRunkel/GOM-JABBAR/actions/workflows/ubuntu-latest.yml/badge.svg)](https://github.com/DustinRunkel/GOM-JABBAR/actions/workflows/ubuntu-latest.yml)
 
 Generic builit-in test manager for embedded projects. Demo'd here on the RP2040. 
 
