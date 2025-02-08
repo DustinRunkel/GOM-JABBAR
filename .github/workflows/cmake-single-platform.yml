@@ -24,7 +24,7 @@ jobs:
 
     - name: Download arm compiler
       #install arm-none-eabi compiler to compile out code
-      run: sudo apt install -y apt install gcc-arm-none-eabi
+      run: sudo apt install -y gcc-arm-none-eabi
 
     - name: Checkout Submodules
     #checkout the sub-modules before we do any builds
