@@ -43,8 +43,15 @@ Our device will be spewing data to the com port, so this is important. Apparentl
 2. Find which com port the device is on in system/hardware devices
 3. Initalize a connection through PuTTy on the com port at baud 115200
 
+# Building in dev-containers
 
+1. Install [docker desktop](https://docs.docker.com/desktop/setup/install/windows-install/)
+2. Install the Dev Containers VSCode plugin
+3. I have already configured our dev container, don't touch it
+4. Click the tiny "Open in remote window" button on the very bottom left
+5. Select "Reopen in container" from the dropdown list
 
+This will open a docker container with all the pre-installed dependancies we need. It shares a volume with the project root, therefore when you build the project, the .uf2 is in the container and on your parent machine. It may take 1 - 4 minutes to build the container upon opening, so be patient. 
 
 # Resources
 - [Raspberry Pi C++ SDK](https://www.raspberrypi.com/documentation/microcontrollers/c_sdk.html)
