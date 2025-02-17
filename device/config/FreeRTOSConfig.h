@@ -39,7 +39,7 @@
  * Use the FreeRTOSConfig.h supplied with the RTOS port in use rather than this
  * generic file, if one is available.
  ******************************************************************************/
-
+#if 0
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
@@ -77,7 +77,7 @@
 
 /* configTICK_RATE_HZ sets frequency of the tick interrupt in Hz, normally
  * calculated from the configCPU_CLOCK_HZ value. */
-#define configTICK_RATE_HZ                         100
+#define configTICK_RATE_HZ                         1000
 
 /* Set configUSE_PREEMPTION to 1 to use pre-emptive scheduling.  Set
  * configUSE_PREEMPTION to 0 to use co-operative scheduling.
@@ -178,7 +178,7 @@
  * size of the task being created.  The same type is used to return information
  * about stack usage in various other API calls.  Defaults to size_t if left
  * undefined. */
-#define configSTACK_DEPTH_TYPE                     size_t
+#define configSTACK_DEPTH_TYPE                     uint32_t
 
 /* configMESSAGE_BUFFER_LENGTH_TYPE sets the type used to store the length of
  * each message written to a FreeRTOS message buffer (the length is also written
@@ -234,7 +234,7 @@
  * task.  See
  * https://www.freertos.org/RTOS-software-timer-service-daemon-task.html Only
  * used if configUSE_TIMERS is set to 1. */
-#define configTIMER_TASK_STACK_DEPTH    configMINIMAL_STACK_SIZE
+#define configTIMER_TASK_STACK_DEPTH    256
 
 /* configTIMER_QUEUE_LENGTH sets the length of the queue (the number of discrete
  * items the queue can hold) used to send commands to the timer task.  See
@@ -287,7 +287,7 @@
  * or heap_4.c are included in the build.  This value is defaulted to 4096 bytes
  * but it must be tailored to each application.  Note the heap will appear in
  * the .bss section.  See https://www.freertos.org/a00111.html. */
-#define configTOTAL_HEAP_SIZE                        4096
+#define configTOTAL_HEAP_SIZE                        (128*1024)
 
 /* Set configAPPLICATION_ALLOCATED_HEAP to 1 to have the application allocate
  * the array used as the FreeRTOS heap.  Set to 0 to have the linker allocate
@@ -362,7 +362,7 @@
  * configCHECK_FOR_STACK_OVERFLOW is set to 1. See
  * https://www.freertos.org/Stacks-and-stack-overflow-checking.html  Defaults to
  * 0 if left undefined. */
-#define configCHECK_FOR_STACK_OVERFLOW        2
+#define configCHECK_FOR_STACK_OVERFLOW        0
 
 /******************************************************************************/
 /* Run time and task stats gathering related definitions. *********************/
@@ -460,7 +460,7 @@
  * allow application tasks to raise privilege.  Defaults to 1 if left undefined.
  * Only used by the FreeRTOS Cortex-M MPU ports, not the standard ARMv7-M
  * Cortex-M port. */
-#define configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY               1
+#define configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY               0
 
 /* Set configALLOW_UNPRIVILEGED_CRITICAL_SECTIONS to 1 to allow unprivileged
  * tasks enter critical sections (effectively mask interrupts). Set to 0 to
@@ -570,7 +570,7 @@
  * respectively. The application can provide it's own implementation of
  * vApplicationGetIdleTaskMemory() and vApplicationGetTimerTaskMemory() by
  * setting configKERNEL_PROVIDED_STATIC_MEMORY to 0 or leaving it undefined. */
-#define configKERNEL_PROVIDED_STATIC_MEMORY    0
+#define configKERNEL_PROVIDED_STATIC_MEMORY    1
 
 /******************************************************************************/
 /* ARMv8-M port Specific Configuration definitions. ***************************/
@@ -591,7 +591,7 @@
 
 /* Set configENABLE_MPU to 1 to enable the Memory Protection Unit (MPU), or 0
  * to leave the Memory Protection Unit disabled. */
-#define configENABLE_MPU                  1
+#define configENABLE_MPU                  0 // we are turning off the MPU for now
 
 /* Set configENABLE_FPU to 1 to enable the Floating Point Unit (FPU), or 0
  * to leave the Floating Point Unit disabled. */
@@ -603,7 +603,7 @@
  * (MVE) is available only on these architectures. configENABLE_MVE must be left
  * undefined, or defined to 0 for the Cortex-M23,Cortex-M33 and Cortex-M35P
  * ports. */
-#define configENABLE_MVE                  1
+#define configENABLE_MVE                  0
 
 /******************************************************************************/
 /* ARMv7-M and ARMv8-M port Specific Configuration definitions. ***************/
@@ -661,5 +661,173 @@
 #define INCLUDE_xTaskAbortDelay                0
 #define INCLUDE_xTaskGetHandle                 0
 #define INCLUDE_xTaskResumeFromISR             1
+
+/* RP2040 specific */
+#define configSUPPORT_PICO_SYNC_INTEROP         1
+#define configSUPPORT_PICO_TIME_INTEROP         1
+
+/* Use Pico SDK ISR handlers */
+#define vPortSVCHandler         isr_svcall
+#define xPortPendSVHandler      isr_pendsv
+#define xPortSysTickHandler     isr_systick
+
+#endif /* FREERTOS_CONFIG_H */
+#endif
+
+/*
+ * FreeRTOS
+ * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * https://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
+ *
+ */
+#ifndef FREERTOS_CONFIG_H
+#define FREERTOS_CONFIG_H
+
+
+/*-----------------------------------------------------------
+ * Application specific definitions.
+ *
+ * These definitions should be adjusted for your particular hardware and
+ * application requirements.
+ *
+ * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
+ * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
+ *
+ * See http://www.freertos.org/a00110.html
+ *----------------------------------------------------------*/
+/*Port related configs*/
+//#define portGET_CORE_ID                         get_core_num
+//#define portYIELD_CORE                          
+
+/*-----------------------------------------------------------
+ * Application specific definitions.
+ *
+ * These definitions should be adjusted for your particular hardware and
+ * application requirements.
+ *
+ * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
+ * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
+ *
+ * See http://www.freertos.org/a00110.html
+ *----------------------------------------------------------*/
+
+/* Scheduler Related */
+#define configUSE_PREEMPTION                    1
+#define configUSE_TICKLESS_IDLE                 0
+#define configUSE_IDLE_HOOK                     0
+#define configUSE_TICK_HOOK                     1
+#define configTICK_RATE_HZ                      ( ( TickType_t ) 1000 )
+#define configMAX_PRIORITIES                    32
+#define configMINIMAL_STACK_SIZE                ( configSTACK_DEPTH_TYPE ) 256
+#define configUSE_16_BIT_TICKS                  0
+
+#define configIDLE_SHOULD_YIELD                 1
+
+/* Synchronization Related */
+#define configUSE_MUTEXES                       1
+#define configUSE_RECURSIVE_MUTEXES             1
+#define configUSE_APPLICATION_TASK_TAG          0
+#define configUSE_COUNTING_SEMAPHORES           1
+#define configQUEUE_REGISTRY_SIZE               8
+#define configUSE_QUEUE_SETS                    1
+#define configUSE_TIME_SLICING                  1
+#define configUSE_NEWLIB_REENTRANT              0
+#define configENABLE_BACKWARD_COMPATIBILITY     0
+#define configNUM_THREAD_LOCAL_STORAGE_POINTERS 5
+
+/* System */
+#define configSTACK_DEPTH_TYPE                  uint32_t
+#define configMESSAGE_BUFFER_LENGTH_TYPE        size_t
+
+/* Memory allocation related definitions. */
+#define configSUPPORT_STATIC_ALLOCATION         0
+#define configSUPPORT_DYNAMIC_ALLOCATION        1
+#define configTOTAL_HEAP_SIZE                   (128*1024)
+#define configAPPLICATION_ALLOCATED_HEAP        0
+
+/* Hook function related definitions. */
+#define configCHECK_FOR_STACK_OVERFLOW          2
+#define configUSE_MALLOC_FAILED_HOOK            0
+#define configUSE_DAEMON_TASK_STARTUP_HOOK      0
+
+/* Run time and task stats gathering related definitions. */
+#define configGENERATE_RUN_TIME_STATS           0
+#define configUSE_TRACE_FACILITY                1
+#define configUSE_STATS_FORMATTING_FUNCTIONS    0
+
+/* Co-routine related definitions. */
+#define configUSE_CO_ROUTINES                   0
+#define configMAX_CO_ROUTINE_PRIORITIES         1
+
+/* Software timer related definitions. */
+#define configUSE_TIMERS                        1
+#define configTIMER_TASK_PRIORITY               ( configMAX_PRIORITIES - 1 )
+#define configTIMER_QUEUE_LENGTH                10
+#define configTIMER_TASK_STACK_DEPTH            1024
+
+/* Interrupt nesting behaviour configuration. */
+/*
+#define configKERNEL_INTERRUPT_PRIORITY         [dependent of processor]
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY    [dependent on processor and application]
+#define configMAX_API_CALL_INTERRUPT_PRIORITY   [dependent on processor and application]
+*/
+
+/* SMP port only */
+#define configNUM_CORES                         2
+#define configTICK_CORE                         0
+#define configRUN_MULTIPLE_PRIORITIES           0
+
+/* RP2040 specific */
+#define configSUPPORT_PICO_SYNC_INTEROP         1
+#define configSUPPORT_PICO_TIME_INTEROP         1
+#define configUSE_CORE_AFFINITY                 1
+#define configRUN_MULTIPLE_PRIORITIES           1
+#define configUSE_TICK_HOOK                     0
+// #define lock_internal_spin_unlock_with_best_effort_wait_or_timeout
+// #define lock_internal_spin_unlock_with_notify
+
+#include <assert.h>
+/* Define to trap errors during development. */
+#define configASSERT(x)                         assert(x)
+
+/* Set the following definitions to 1 to include the API function, or zero
+to exclude the API function. */
+#define INCLUDE_vTaskPrioritySet                1
+#define INCLUDE_uxTaskPriorityGet               1
+#define INCLUDE_vTaskDelete                     1
+#define INCLUDE_vTaskSuspend                    1
+#define INCLUDE_vTaskDelayUntil                 1
+#define INCLUDE_vTaskDelay                      1
+#define INCLUDE_xTaskGetSchedulerState          1
+#define INCLUDE_xTaskGetCurrentTaskHandle       1
+#define INCLUDE_uxTaskGetStackHighWaterMark     1
+#define INCLUDE_xTaskGetIdleTaskHandle          1
+#define INCLUDE_eTaskGetState                   1
+#define INCLUDE_xTimerPendFunctionCall          1
+#define INCLUDE_xTaskAbortDelay                 1
+#define INCLUDE_xTaskGetHandle                  1
+#define INCLUDE_xTaskResumeFromISR              1
+#define INCLUDE_xQueueGetMutexHolder            1
+
+/* A header file that defines trace macro can be included here. */
 
 #endif /* FREERTOS_CONFIG_H */

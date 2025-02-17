@@ -50,9 +50,6 @@ int64_t alarm_callback(alarm_id_t id, void *user_data) {
     return 0;
 }
 
-
-
-
 // UART defines
 // By default the stdout UART is `uart0`, so we will use the second one
 #define UART_ID uart1

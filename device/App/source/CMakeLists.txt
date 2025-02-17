@@ -12,12 +12,18 @@
 # \ \________\ \__\ \__\ \_______\ \_______\ \__\ \__\ \__\\ _\ 
 #  \|________|\|__|\|__|\|_______|\|_______|\|__|\|__|\|__|\|__|
 #
-# our specific kernel config
+# Main.c is our entrypoint into the FreeRTOS kernel
 
-set(target freertos_config)
+set(target jabbar_app)
 
-add_library(${target} INTERFACE)
+add_executable(${target} main.c)
 
-target_include_directories(${target} SYSTEM INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_LIST_DIR})
+target_link_libraries(${target} pico_stdlib pico_cyw43_arch_none FreeRTOS-Kernel FreeRTOS-Kernel-Heap4 freertos_config)
 
-target_compile_definitions(${target} INTERFACE projCOVERAGE_TEST=0)
+target_include_directories(${target} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
+
+# Enable/disable STDIO via USB and UART
+pico_enable_stdio_usb(${target} 1)
+pico_enable_stdio_uart(${target} 1)
+
+pico_add_extra_outputs( ${target} )
