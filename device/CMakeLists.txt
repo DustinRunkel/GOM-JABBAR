@@ -32,6 +32,8 @@ add_subdirectory(config)
 #We are working with ARM-CORTEX-M0+ architecture
 set(FREERTOS_PORT "GCC_ARM_CM0" )
 
+add_compile_definitions( configNUM_CORES=2 )
+
 if( BUILD_DEMO_APP )
         add_subdirectory(App)
 endif()
