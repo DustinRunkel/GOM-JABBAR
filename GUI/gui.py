@@ -30,7 +30,7 @@ class USBMonitorApp(QWidget):
 
         self.check_usb_status()
 
-    def get_available_backend(self) -> usb.backend | None:
+    def get_available_backend(self):
         """Tries all known USB backends and returns the first one that works."""
         for backend in [usb.backend.libusb1, usb.backend.openusb, usb.backend.libusb0]:
             try:
