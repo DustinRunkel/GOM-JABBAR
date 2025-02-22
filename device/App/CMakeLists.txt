@@ -12,12 +12,8 @@
 # \ \________\ \__\ \__\ \_______\ \_______\ \__\ \__\ \__\\ _\ 
 #  \|________|\|__|\|__|\|_______|\|_______|\|__|\|__|\|__|\|__|
 #
-# our specific kernel config
+# Directory where our demonstration app lives
 
-set(target freertos_config)
+set( jabbar_app_includes "${CMAKE_CURRENT_SOURCE_DIR}/include" CACHE STRING "App include path")
 
-add_library(${target} INTERFACE)
-
-target_include_directories(${target} SYSTEM INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_LIST_DIR})
-
-target_compile_definitions(${target} INTERFACE projCOVERAGE_TEST=0)
+add_subdirectory(source)
