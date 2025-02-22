@@ -20,12 +20,16 @@
 #include <timers.h>
 #include <semphr.h>
 
+/*Gom-Jabbar library*/
+#include "Gom-Jabbar.hpp"
+
 /* Standard includes. */
 #include <stdio.h>
 
 /*pico sdk includes*/
 #include "pico/stdlib.h"
 #include "pico/cyw43_arch.h"
+
 
 /*-----------------------------------------------------------*/
 

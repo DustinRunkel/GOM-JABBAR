@@ -12,5 +12,8 @@
 # \ \________\ \__\ \__\ \_______\ \_______\ \__\ \__\ \__\\ _\ 
 #  \|________|\|__|\|__|\|_______|\|_______|\|__|\|__|\|__|\|__|
 #
+# Where our interface library lives
 
-add_subdirectory(src)
+#header only for now
+add_subdirectory( include )
+

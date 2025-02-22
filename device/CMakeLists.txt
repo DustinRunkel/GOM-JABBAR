@@ -32,7 +32,10 @@ add_subdirectory(config)
 #We are working with ARM-CORTEX-M0+ architecture
 set(FREERTOS_PORT "GCC_ARM_CM0" )
 
+#Todo: Make buildsystem flags for cross-compiling
 add_compile_definitions( configNUM_CORES=2 )
+
+add_subdirectory(Gom-Jabbar)
 
 if( BUILD_DEMO_APP )
         add_subdirectory(App)
