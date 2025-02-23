@@ -1,2 +1,6 @@
 build
 *venv/
+share/
+man/
+doc/
+bin/
