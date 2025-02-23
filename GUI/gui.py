@@ -1,10 +1,12 @@
 import sys
+import json
 import usb.core
 import usb.util
 import usb.backend.libusb1
 import usb.backend.openusb
 import usb.backend.libusb0
-from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel
+from datetime import datetime
+from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QTextEdit
 from PyQt6.QtCore import QTimer, Qt
 
 
@@ -23,6 +25,13 @@ class USBMonitorApp(QWidget):
         self.layout.addWidget(self.status_label)
         self.setLayout(self.layout)
 
+        # JSON Output Display (new)
+        self.json_dis = QTextEdit(self) 
+        self.json_dis.setReadOnly(True)
+        self.layout.addWidget(self.json_dis)
+
+        self.setLayout(self.layout)
+
         # Polls the USB Port every 3 seconds to determine if new USB 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.check_usb_status)
@@ -39,6 +48,26 @@ class USBMonitorApp(QWidget):
             except Exception:
                 continue 
         return None  
+
+    def json_message(self, message, connection, usb=""):
+        """Converts the message to JSON and displays it in the QTextEdit widget."""
+        message = {
+            "message": str(int(datetime.now().timestamp())),
+            "timestamp": (datetime.now().isoformat),
+            "source": "GUI",
+            "device": "Raspberry Pi",
+            "message": message,
+            "level": "INFO" if message == "Status" else "ERROR",
+            "connection": connection,
+            "usb": usb if usb else "No USB Connection",
+        }
+        json_message = json.dumps(message, indent=4)
+        self.json_dis.setText(json_message)
+        return json_message
+
+        def update_display(self, json_message):
+            """Updates the JSON display with the new message."""
+            self.json_dis.setText(json_message)
 
     def check_usb_status(self) -> None:
         # Find an available USB backend
