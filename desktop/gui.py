@@ -47,7 +47,7 @@ class USBMonitorApp(QWidget):
             except Exception:
                 continue 
         return None  
-
+      
     def json_message(self, message, connection, usb=""):
         """Converts the message to JSON and displays it in the QTextEdit widget."""
         message = {
@@ -92,7 +92,6 @@ class USBMonitorApp(QWidget):
             self.status_label.setText(f"❌ USB Error: {str(e)}")
             self.status_label.setStyleSheet("color: orange; font-size: 16px;")
 
-
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
@@ -105,5 +104,3 @@ if __name__ == "__main__":
     window.show()
 
     sys.exit(app.exec())
-
-
