@@ -4,3 +4,5 @@
 [submodule "device/pico-sdk"]
 	path = device/pico-sdk
 	url = https://github.com/raspberrypi/pico-sdk
+[submodule "GOM-JABBAR"]
+	url = https://github.com/DustinRunkel/GOM-JABBAR.git
