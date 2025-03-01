@@ -13,5 +13,6 @@
 //  \|________|\|__|\|__|\|_______|\|_______|\|__|\|__|\|__|\|__|
 // mass import file
 #pragma once
-#include "GJ_test.hpp"
-#include "GJ_types.hpp"
+#include "GJ_Test.hpp"
+#include "GJ_Types.hpp"
+#include "GJ_TestManager.hpp"

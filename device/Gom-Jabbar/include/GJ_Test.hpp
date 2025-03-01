@@ -13,13 +13,17 @@
 //  \|________|\|__|\|__|\|_______|\|_______|\|__|\|__|\|__|\|__|
 // Test template class
 #pragma once
-#include "GJ_types.hpp"
+#include "GJ_Types.hpp"
 #include <functional>
 
 namespace GJ
 {
+    class ITest 
+    {
+        virtual TestResult run();
+    }
     template<typename return_t, typename... arg_t >
-    class Test
+    class Test : ITest
     {
         private:
             std::function<return_t(arg_t...)> func_;
@@ -99,7 +103,7 @@ namespace GJ
             /*
             * result data is private, because we do not want any manipulation of the results
             */
-            inline constexpr return_t * get_return_data()
+            inline constexpr return_t * get_result()
             {
                 return std::move(result_data_);
             }
