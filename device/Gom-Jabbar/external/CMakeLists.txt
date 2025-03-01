@@ -12,12 +12,8 @@
 # \ \________\ \__\ \__\ \_______\ \_______\ \__\ \__\ \__\\ _\ 
 #  \|________|\|__|\|__|\|_______|\|_______|\|__|\|__|\|__|\|__|
 #
-# Where our interface library lives
-set( gj_includes "${CMAKE_CURRENT_SOURCE_DIR}" CACHE STRING "GJ include path")
-
-# Also make library compilation target here
-add_library( gom-jabbar INTERFACE )
-
-target_link_libraries( gom-jabbar INTERFACE cpp_yyjson::cpp_yyjson)
-
-target_include_directories( gom-jabbar INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} )
+# External projects live here
+add_subdirectory( yyjson )
+add_subdirectory( fmt )
+add_subdirectory( nameof )
+add_subdirectory( cpp-yyjson ${CMAKE_CURRENT_BINARY_DIR}/cpp-yyjson )

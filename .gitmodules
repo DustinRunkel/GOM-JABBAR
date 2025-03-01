@@ -4,3 +4,15 @@
 [submodule "device/pico-sdk"]
 	path = device/pico-sdk
 	url = https://github.com/raspberrypi/pico-sdk
+[submodule "device/Gom-Jabbar/external/cpp-yyjson"]
+	path = device/Gom-Jabbar/external/cpp-yyjson
+	url = https://github.com/yosh-matsuda/cpp-yyjson.git
+[submodule "device/Gom-Jabbar/external/yyjson"]
+	path = device/Gom-Jabbar/external/yyjson
+	url = https://github.com/ibireme/yyjson.git
+[submodule "device/Gom-Jabbar/external/fmt"]
+	path = device/Gom-Jabbar/external/fmt
+	url = https://github.com/fmtlib/fmt.git
+[submodule "device/Gom-Jabbar/external/nameof"]
+	path = device/Gom-Jabbar/external/nameof
+	url = https://github.com/Neargye/nameof.git
