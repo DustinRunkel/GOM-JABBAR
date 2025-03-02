@@ -33,12 +33,10 @@
 
 
 /*-----------------------------------------------------------*/
-//Flag that tells us the end of the JSON string
-static bool TEMP_FLAG_JSON_END = 0;
 
 void ledTask( void * parameters ) __attribute__( ( noreturn ) );
 
-void listenerCallback( void * str );
+void listenerCallback( void * _params );
 
 //void shouterTask( );
 
@@ -61,13 +59,8 @@ void ledTask( void * parameters )
     }
 }
 
-void listenerCallback( void * str )
+void listenerCallback( void * _params )
 {
-    /*
-    * Params must come in as void pointer, therefore I must cast this into the correct type
-    * before use in the source program. 
-    */
-    auto str_ = static_cast<std::string*>(str);
     /*
     * RPI SDK wires stdin through UART or USB. We must collect each char 
     * into our buffer
@@ -75,33 +68,45 @@ void listenerCallback( void * str )
     * One thing to note: this callback is called every time a char is in the buffer,
     * meaning we must read json objects one byte at a time, and assemble them in memory
     * over here.
+    * 
+    * This is a possible implementation of your application using the GOM-Jabbar json reader
+    * The json reader only needs an incoming string from some protocol on your board
+    * Eventually, this will be cofigured via an interface
     */
     char in_char = getchar();
 
-    if(in_char == '\0')
+    static unsigned int open_bracket = 0;
+    static unsigned int closed_bracket = 0;
+    static GJ::JsonReader reader = GJ::JsonReader();
+
+    reader.push(in_char);
+    #ifdef DEBUG
+    printf("%c", in_char);
+    #endif
+
+    if(in_char == '{')
     {
-        TEMP_FLAG_JSON_END = 1;
-
-        //push back the null byte
-        str_->push_back(in_char);
-
-        //TODO: make a manager that stores JSON objects here I just print them back out
-        yyjson_doc *doc = yyjson_read(str_->c_str(), str_->length() + 1, 0);
-        yyjson_val *root = yyjson_doc_get_root(doc);
-
-        size_t idx, max;
-        yyjson_val *val;
-        yyjson_arr_foreach(root, idx, max, val ) 
-        {
-            printf("Item%d: %s\n", idx, (char*)yyjson_get_str(val));
-        }
-
-        str_->clear();
-        TEMP_FLAG_JSON_END = 0;
+        open_bracket++;
     }
-    else
+    else if( in_char == '}')
     {
-        str_->push_back(in_char);
+        closed_bracket++;
+    }
+
+    /*
+    * If the json object has equal open/closed brackets,
+    * the object is fully read-in. Therefore we reset the
+    * reader by deserializing the json object into memory
+    * and adding it to our backend message queue
+    */
+    if( open_bracket == closed_bracket )
+    {
+        open_bracket = 0;
+        closed_bracket = 0;
+        reader.deserialize();
+        #ifdef DEBUG
+        printf("\nIF NO ERROR BEFORE HERE: JSON ACCEPTED\n");
+        #endif
     }
 
 }
@@ -111,8 +116,6 @@ int main( void )
 {
     TaskHandle_t ledTaskTCB;
 
-    std::string * incoming_json = new std::string();
-
     ( void ) printf( "GOM-JABBAR demo application pre-alpha build: use at own risk\n" );
 
     if (cyw43_arch_init()) {
@@ -120,9 +123,18 @@ int main( void )
     }
     cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
 
+    /*
+    * initialize our USB driver and hardware items
+    */
     stdio_usb_init();
 
-    stdio_set_chars_available_callback(listenerCallback, incoming_json);
+    /*
+    * Our SDK allows us to set a callback function when a character is written to the device
+    * We can only be sure there is one character available when the callback is called, therefore
+    * we have to use this seemingly painful, but reliable method of reading in the characters one-by-one
+    * and constructing our json object in memory
+    */
+    stdio_set_chars_available_callback(listenerCallback, NULL);
 
     ( void ) xTaskCreate( ledTask,
                             "ledblink",

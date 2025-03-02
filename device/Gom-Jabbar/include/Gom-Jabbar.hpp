@@ -15,4 +15,4 @@
 #pragma once
 #include "GJ_test.hpp"
 #include "GJ_types.hpp"
-#include "yyjson.h"
+#include "GJ_Json.hpp"
