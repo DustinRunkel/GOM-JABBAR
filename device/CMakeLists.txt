@@ -24,6 +24,10 @@ project(GOM-JABBAR
 # Optional flags section: will be important later
 option(BUILD_DEMO_APP ON "Builds the demo applicaiton for the RP2040W")
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_definitions(DEBUG)
+endif()
+
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 #config values for the kernel, kernel is compiled with our application
