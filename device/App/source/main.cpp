@@ -25,6 +25,7 @@
 
 /* Standard includes. */
 #include <stdio.h>
+#include <string>
 
 /*pico sdk includes*/
 #include "pico/stdlib.h"
@@ -32,8 +33,14 @@
 
 
 /*-----------------------------------------------------------*/
+//Flag that tells us the end of the JSON string
+static bool TEMP_FLAG_JSON_END = 0;
 
 void ledTask( void * parameters ) __attribute__( ( noreturn ) );
+
+void listenerCallback( void * str );
+
+//void shouterTask( );
 
 /*-----------------------------------------------------------*/
 
@@ -53,11 +60,58 @@ void ledTask( void * parameters )
         flag = !flag;
     }
 }
+
+void listenerCallback( void * str )
+{
+    /*
+    * Params must come in as void pointer, therefore I must cast this into the correct type
+    * before use in the source program. 
+    */
+    auto str_ = static_cast<std::string*>(str);
+    /*
+    * RPI SDK wires stdin through UART or USB. We must collect each char 
+    * into our buffer
+    * 
+    * One thing to note: this callback is called every time a char is in the buffer,
+    * meaning we must read json objects one byte at a time, and assemble them in memory
+    * over here.
+    */
+    char in_char = getchar();
+
+    if(in_char == '\0')
+    {
+        TEMP_FLAG_JSON_END = 1;
+
+        //push back the null byte
+        str_->push_back(in_char);
+
+        //TODO: make a manager that stores JSON objects here I just print them back out
+        yyjson_doc *doc = yyjson_read(str_->c_str(), str_->length() + 1, 0);
+        yyjson_val *root = yyjson_doc_get_root(doc);
+
+        size_t idx, max;
+        yyjson_val *val;
+        yyjson_arr_foreach(root, idx, max, val ) 
+        {
+            printf("Item%d: %s\n", idx, (char*)yyjson_get_str(val));
+        }
+
+        str_->clear();
+        TEMP_FLAG_JSON_END = 0;
+    }
+    else
+    {
+        str_->push_back(in_char);
+    }
+
+}
 /*-----------------------------------------------------------*/
 
 int main( void )
 {
     TaskHandle_t ledTaskTCB;
+
+    std::string * incoming_json = new std::string();
 
     ( void ) printf( "GOM-JABBAR demo application pre-alpha build: use at own risk\n" );
 
@@ -65,6 +119,10 @@ int main( void )
         printf("Wi-Fi init failed\n");
     }
     cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
+
+    stdio_usb_init();
+
+    stdio_set_chars_available_callback(listenerCallback, incoming_json);
 
     ( void ) xTaskCreate( ledTask,
                             "ledblink",

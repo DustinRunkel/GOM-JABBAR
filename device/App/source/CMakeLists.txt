@@ -22,8 +22,10 @@ target_link_libraries(${target} pico_stdlib pico_cyw43_arch_none FreeRTOS-Kernel
 
 target_include_directories(${target} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 
+target_compile_options(${target} PUBLIC "-fexceptions")
+
 # Enable/disable STDIO via USB and UART
 pico_enable_stdio_usb(${target} 1)
-pico_enable_stdio_uart(${target} 1)
+pico_enable_stdio_uart(${target} 0)
 
 pico_add_extra_outputs( ${target} )
