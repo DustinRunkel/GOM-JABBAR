@@ -5,6 +5,8 @@ import usb.util
 import usb.backend.libusb1
 import usb.backend.openusb
 import usb.backend.libusb0
+import serial  # For Serial Communication
+import serial.tools.list_ports # To find serial port
 from datetime import datetime
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QTextEdit
 from PyQt6.QtCore import QTimer, Qt
@@ -24,6 +26,11 @@ class USBMonitorApp(QWidget):
         self.layout.addWidget(self.status_label)
         self.setLayout(self.layout)
 
+        # Serial Status Label
+        self.serial_label = QLabel("No Serial connection...", self)
+        self.serial_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.layout.addWidget(self.serial_label)
+
         # JSON Output Display (new)
         self.json_dis = QTextEdit(self) 
         self.json_dis.setReadOnly(True)
@@ -35,6 +42,12 @@ class USBMonitorApp(QWidget):
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.check_usb_status)
         self.timer.start(3000)
+
+        #Polls the serial connection every second
+        self.serial_port = None
+        self.serial_timer = QTimer(self)
+        self.serial_timer.timeout.connect(self.read_serial_data)
+        self.serial_timer.start(1000)
 
         self.check_usb_status()
 
@@ -48,25 +61,65 @@ class USBMonitorApp(QWidget):
                 continue 
         return None  
 
-    def json_message(self, message, connection, usb=""):
+    def json_message(self, message, connection, usb="No USB Connection",serial_data=None):
         """Converts the message to JSON and displays it in the QTextEdit widget."""
-        message = {
-            "message": str(int(datetime.now().timestamp())),
-            "timestamp": (datetime.now().isoformat),
+        json_info = {
+            "datetime": datetime.now().isoformat(),
             "source": "GUI",
             "device": "Raspberry Pi",
             "message": message,
-            "level": "INFO" if message == "Status" else "ERROR",
+            "level": "INFO" if connection is True else "ERROR",
             "connection": connection,
             "usb": usb if usb else "No USB Connection",
+            serial_data: serial_data if serial_data else "No Serial Data" #Serial Data
         }
-        json_message = json.dumps(message, indent=4)
+        json_message = json.dumps(json_info, indent=4)
         self.json_dis.setText(json_message)
         return json_message
+    
+    # This is used to find the serial port
+    def find_serial_port(self):
+        ports = serial.tools.list_ports.comports()
+        for port in ports:
+            if (port.vid == self.vendor_id and port.pid == self.product_id):
+                return port.device
+        return None
+    
+    # This is to connect to the serial port
+    def connect_serial(self):
+        if self.serial_port is None or not self.serial_port.is_open:
+            port = self.find_serial_port()
+            if port:
+                try:
+                    self.serial_port = serial.Serial(port, 115200, timeout=1)
+                    self.serial_label.setText("Serial Connection Established")
+                    self.serial_label.setStyleSheet("color: green; font-size: 16px;")
+                except serial.SerialException as e:
+                    self.serial_label.setText(f"Serial Error: {str(e)}")
+                    self.serial_label.setStyleSheet("color: orange; font-size: 16px;")
+            else:
+                self.serial_label.setText("No Serial Connection")
+                self.serial_label.setStyleSheet("color: red; font-size: 16px;")
+                self.json_message("No Serial Connection", connection=False)
 
-        def update_display(self, json_message):
-            """Updates the JSON display with the new message."""
-            self.json_dis.setText(json_message)
+    # This is to read the serial data
+    def read_serial_data(self):
+        if self.serial_port and self.serial_port.is_open:
+            try:
+                if self.serial_port.in_waiting > 0:
+                    serial_data = self.serial_port.readline().decode("utf-8").strip()
+                    if serial_data:
+                        current_text = self.json_dis.toPlainText()
+                        if current_text:
+                            json_data = json.loads(current_text)
+                            json_data["serial_data"] = serial_data 
+                            self.json_dis.setText(json.dumps(json_data, indent=4))
+
+                    except (serial.SerialException, UnicodeDecodeError) as e:
+                            self.serial_label.setText(f"Serial Error: {str(e)}")
+                            self.serial_label.setStyleSheet("color: orange; font-size: 16px;")
+                            self.serial_port.close()
+                            self.serial_port = None
 
     def check_usb_status(self) -> None:
         # Find an available USB backend
@@ -75,6 +128,7 @@ class USBMonitorApp(QWidget):
         if backend is None:
             self.status_label.setText("❌ No available USB backend!")
             self.status_label.setStyleSheet("color: orange; font-size: 16px;")
+            self.json_message("No available USB backend!", connection=False)
             return
 
         try:
@@ -84,13 +138,22 @@ class USBMonitorApp(QWidget):
             if device:
                 self.status_label.setText("✅ Raspberry Pi Connected")
                 self.status_label.setStyleSheet("color: green; font-size: 16px;")
+                self.json_message("Raspberry Pi Connected", connection=True, usb="Connected")
+                self.connect_serial()
             else:
                 self.status_label.setText("❌ Raspberry Pi Disconnected")
                 self.status_label.setStyleSheet("color: red; font-size: 16px;")
+                self.json_message("Raspberry Pi Disconnected", connection=False)
+                if self.serial_port:
+                    self.serial_port.close()
+                    self.serial_port = None
+                    self.serial_label.setText("No Serial Connection")
 
         except usb.core.USBError as e:
             self.status_label.setText(f"❌ USB Error: {str(e)}")
             self.status_label.setStyleSheet("color: orange; font-size: 16px;")
+
+        
 
 
 if __name__ == "__main__":
