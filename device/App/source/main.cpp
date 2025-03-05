@@ -31,7 +31,6 @@
 #include "pico/stdlib.h"
 #include "pico/cyw43_arch.h"
 
-#define ENDSTDIN 255
 /*-----------------------------------------------------------*/
 
 void ledTask( void * parameters ) __attribute__( ( noreturn ) );

@@ -126,7 +126,7 @@ namespace GJ
                 
                 if(!jsonObj_)
                 {
-                    char buffer[70];
+                    char buffer[100];
                     snprintf(buffer, sizeof(buffer), "JSON READ ERROR: %s:%d code: %d\n", err_.msg, err_.pos, err_.code);
                     errStr_ = buffer;
                     raw_.clear();
