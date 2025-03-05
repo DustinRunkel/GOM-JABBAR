@@ -19,6 +19,7 @@
 #include <string>
 #include <deque>
 #include <memory>
+#include <format>
 
 /*external includes*/
 #include "yyjson.h"
@@ -87,9 +88,9 @@ namespace GJ
     {
         private:
             std::string raw_;
-            yyjson_read_err err_;
 
         public:
+            std::string errStr_;
             JsonReader(){};
             /*
             * Push a character onto the back of the internal string
@@ -118,20 +119,25 @@ namespace GJ
             * and puts it into internal FILO queue
             * Includes error handling
             */
-            void deserialize()
+            bool deserialize()
             {
+                yyjson_read_err err_;
                 yyjson_doc * jsonObj_ = yyjson_read_opts((char *)raw_.c_str(), raw_.length(), 0, NULL, &err_ );
                 
                 if(!jsonObj_)
-                {//TODO: send error to generic messenger interface instead
-                    printf("JSON read error: %s, code: %u at byte position: %lu\n", err_.msg, err_.code, err_.pos);
+                {
+                    char buffer[70];
+                    snprintf(buffer, sizeof(buffer), "JSON READ ERROR: %s:%d code: %d\n", err_.msg, err_.pos, err_.code);
+                    errStr_ = buffer;
+                    raw_.clear();
+                    return false;
                 }
                 else
                 {
                     JsonQueue::getInstance()->add(jsonObj_);
+                    raw_.clear();
+                    return true;
                 }
-                //Clear out the string buffer and ready for the next object
-                raw_.clear(); 
             }
             /*
             * Once we decide on a schema to pass messages back and forth, we can add more here

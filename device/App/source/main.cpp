@@ -31,7 +31,7 @@
 #include "pico/stdlib.h"
 #include "pico/cyw43_arch.h"
 
-
+#define ENDSTDIN 255
 /*-----------------------------------------------------------*/
 
 void ledTask( void * parameters ) __attribute__( ( noreturn ) );
@@ -61,6 +61,7 @@ void ledTask( void * parameters )
 
 void listenerCallback( void * _params )
 {
+    static GJ::JsonReader reader = GJ::JsonReader();
     /*
     * RPI SDK wires stdin through UART or USB. We must collect each char 
     * into our buffer
@@ -73,25 +74,12 @@ void listenerCallback( void * _params )
     * The json reader only needs an incoming string from some protocol on your board
     * Eventually, this will be cofigured via an interface
     */
-    char in_char = getchar();
-
-    static unsigned int open_bracket = 0;
-    static unsigned int closed_bracket = 0;
-    static GJ::JsonReader reader = GJ::JsonReader();
-
-    reader.push(in_char);
-    #ifdef DEBUG
+    char in_char = stdio_getchar_timeout_us( 10 );
+    /*
+    * TODO: I cannot figure out why no input works if echo is disabled
+    * We will eventually have to figure this out
+    */
     printf("%c", in_char);
-    #endif
-
-    if(in_char == '{')
-    {
-        open_bracket++;
-    }
-    else if( in_char == '}')
-    {
-        closed_bracket++;
-    }
 
     /*
     * If the json object has equal open/closed brackets,
@@ -99,15 +87,21 @@ void listenerCallback( void * _params )
     * reader by deserializing the json object into memory
     * and adding it to our backend message queue
     */
-    if( open_bracket == closed_bracket )
+    if( in_char == '$') //dollars for now, switch to null-byte later
     {
-        open_bracket = 0;
-        closed_bracket = 0;
-        reader.deserialize();
-        #ifdef DEBUG
-        printf("\nIF NO ERROR BEFORE HERE: JSON ACCEPTED\n");
-        #endif
+        if(! reader.deserialize())
+        {
+            printf("\n%s", reader.errStr_.c_str());
+        }
     }
+    else
+    {
+        reader.push(in_char);
+    }
+    stdio_flush();
+#ifdef DEBUG
+    printf("\nIF NO ERROR BEFORE HERE: JSON ACCEPTED\n");
+#endif
 
 }
 /*-----------------------------------------------------------*/
@@ -140,7 +134,7 @@ int main( void )
                             "ledblink",
                             128,
                             NULL,
-                            1,
+                            5,
                             &ledTaskTCB);
     /* Start the scheduler. */
     vTaskStartScheduler();
