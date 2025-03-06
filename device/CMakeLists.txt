@@ -3,7 +3,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Initialize pico_sdk from installed location
@@ -23,6 +23,10 @@ project(GOM-JABBAR
 
 # Optional flags section: will be important later
 option(BUILD_DEMO_APP ON "Builds the demo applicaiton for the RP2040W")
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_definitions(DEBUG)
+endif()
 
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
