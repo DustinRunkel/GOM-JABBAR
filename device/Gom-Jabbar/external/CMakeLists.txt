@@ -12,20 +12,8 @@
 # \ \________\ \__\ \__\ \_______\ \_______\ \__\ \__\ \__\\ _\ 
 #  \|________|\|__|\|__|\|_______|\|_______|\|__|\|__|\|__|\|__|
 #
-# Main.c is our entrypoint into the FreeRTOS kernel
-
-set(target jabbar_app)
-
-add_executable(${target} main.cpp)
-
-target_link_libraries(${target} pico_stdlib pico_cyw43_arch_none FreeRTOS-Kernel FreeRTOS-Kernel-Heap4 freertos_config gom-jabbar)
-
-target_include_directories(${target} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
-
-target_compile_options(${target} PUBLIC "-fexceptions")
-
-# Enable/disable STDIO via USB and UART
-pico_enable_stdio_usb(${target} 1)
-pico_enable_stdio_uart(${target} 0)
-
-pico_add_extra_outputs( ${target} )
+# External projects live here
+add_subdirectory( yyjson )
+add_subdirectory( fmt )
+add_subdirectory( nameof )
+add_subdirectory( cpp-yyjson ${CMAKE_CURRENT_BINARY_DIR}/cpp-yyjson )

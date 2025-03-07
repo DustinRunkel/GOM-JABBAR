@@ -15,5 +15,5 @@
 # Where our interface library lives
 
 #header only for now
+add_subdirectory( external )
 add_subdirectory( include )
-
