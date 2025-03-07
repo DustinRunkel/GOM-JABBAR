@@ -15,7 +15,7 @@
 // Used to run tests and aquire results
 
 #pragma once
-#include <vector>
+#include <map>
 #include "GJ_Types.hpp"
 #include "GJ_Test.hpp"
 
@@ -25,7 +25,8 @@ namespace GJ
     {
         private:
         public:
-            std::vector<Test> tests_;
+            std::map<unsigned int, ITest*> tests_;
+            std::vector<unsigned int> tests_to_run;
 
             /*
             * Called to allow recovery from a critical state
@@ -34,26 +35,40 @@ namespace GJ
             virtual void critical_recovery(void){};
 
             /*
+            * Overloadable instance that allows the disable of interupts during tests
+            * Leave this alone to leave interupts enabled
+            */
+            virtual void critical_section_start(void){};
+            virtual void critical_section_end(void){};
+
+            /*
             * Run all tests in the specifed group
             */
             void run( void )
             {
-                for( auto t : tests_)
+                critical_section_start();
+                for( auto t : tests_to_run )
                 {
-                    t.run(/* TODO: Arguments need to be provided from GUI message*/);
+                    //Will run test and ALL args sent in
+                    tests_[t]->run();
                     /*
                     * If we pass the gate, we run the next test
                     */
-                    if( t.gate() )
+                    if( tests_[t]->gate() )
                     {
                         continue;
                     }
-                    /*
-                    * We should only be down here if a critical failure happened
-                    */
                     critical_recovery();
-                    break;
                 }
+                critical_section_end();
+                
+            }
+
+            //Todo: restrict this to the arg types of the function under test
+            template<typename ...T>
+            void add_args_to_testid(unsigned int testId, T&&... args)
+            {
+                tests_[testId]->add_args(std::forward(args...));
             }
     };
 }

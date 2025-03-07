@@ -19,3 +19,5 @@ set( gj_includes "${CMAKE_CURRENT_SOURCE_DIR}" CACHE STRING "GJ include path")
 add_library( gom-jabbar INTERFACE )
 
 target_include_directories( gom-jabbar INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} )
+
+target_compile_options(gom-jabbar INTERFACE "-frtti")
