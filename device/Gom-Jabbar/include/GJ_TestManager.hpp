@@ -52,11 +52,12 @@ class TestManager
                 //Will run test and ALL args sent in
                 tests_[t]->run();
                 /*
-                * If we pass the gate, we run the next test
+                * If we do not pass the gate, we halt
                 */
-                if( tests_[t]->gate() )
+                if( !tests_[t]->gate() )
                 {
-                    continue;
+                    //TODO: add a message here that sends a failure message to the desktop
+                    break;
                 }
                 critical_recovery();
             }
