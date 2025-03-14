@@ -15,18 +15,18 @@
 #pragma once
 namespace GJ
 {
-    enum TestResult
-    {
-        OK,
-        ERROR,
-        NONE
-    };
+enum TestResult
+{
+    OK,
+    ERROR,
+    NONE
+};
 
-    enum TestSeverity
-    {
-        CRITICAL,
-        HIGH,
-        MEDUIM,
-        LOW
-    };
+enum TestSeverity
+{
+    CRITICAL,
+    HIGH,
+    MEDUIM,
+    LOW
+};
 }

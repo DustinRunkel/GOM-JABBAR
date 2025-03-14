@@ -12,3 +12,10 @@
 // \ \________\ \__\ \__\ \_______\ \_______\ \__\ \__\ \__\\ _\ 
 //  \|________|\|__|\|__|\|_______|\|_______|\|__|\|__|\|__|\|__|
 // Message objects, stores elements of JSON input for internal use
+
+namespace GJ
+{
+    class Message
+    {
+    }
+}
