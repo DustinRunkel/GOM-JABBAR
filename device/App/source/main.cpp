@@ -73,12 +73,12 @@ void listenerCallback( void * _params )
     * The json reader only needs an incoming string from some protocol on your board
     * Eventually, this will be cofigured via an interface
     */
-    char in_char = stdio_getchar_timeout_us( 10 );
+    volatile char in_char = stdio_getchar_timeout_us( 10 );
     /*
     * TODO: I cannot figure out why no input works if echo is disabled
     * We will eventually have to figure this out
     */
-    printf("%c", in_char);
+    //printf("%c", in_char);
 
     /*
     * If the json object has equal open/closed brackets,
