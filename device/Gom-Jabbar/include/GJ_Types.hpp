@@ -29,4 +29,17 @@ enum TestSeverity
     MEDUIM,
     LOW
 };
+
+enum MessageType
+{
+    //out-bound
+    MANIFEST,
+    RESULT,
+    LOG,
+    //in-bound
+    SESSION_START,
+    SESSION_END,
+    SESSION_PAUSE
+};
+
 }

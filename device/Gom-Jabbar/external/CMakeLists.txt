@@ -16,4 +16,3 @@
 add_subdirectory( yyjson )
 add_subdirectory( fmt )
 add_subdirectory( nameof )
-add_subdirectory( cpp-yyjson ${CMAKE_CURRENT_BINARY_DIR}/cpp-yyjson )

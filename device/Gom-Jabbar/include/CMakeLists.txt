@@ -18,8 +18,8 @@ set( gj_includes "${CMAKE_CURRENT_SOURCE_DIR}" CACHE STRING "GJ include path")
 # Also make library compilation target here
 add_library( gom-jabbar INTERFACE )
 
-target_link_libraries( gom-jabbar INTERFACE cpp_yyjson::cpp_yyjson)
+target_link_libraries( gom-jabbar INTERFACE yyjson)
 
 target_include_directories( gom-jabbar INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} )
 
-target_compile_options(gom-jabbar INTERFACE "-frtti")
+target_compile_options(gom-jabbar INTERFACE $<$<COMPILE_LANGUAGE:CXX>: -frtti>)

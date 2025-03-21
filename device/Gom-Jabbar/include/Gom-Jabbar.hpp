@@ -17,3 +17,4 @@
 #include "GJ_Types.hpp"
 #include "GJ_TestManager.hpp"
 #include "GJ_Json.hpp"
+#include "GJ_Message.hpp"

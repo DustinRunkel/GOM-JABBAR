@@ -29,6 +29,7 @@ namespace GJ
 /*
 * Queue that stores JSON objects waiting to be read by tasks or whatever
 * Is static because we only want one
+* TODO: add mutexes for multi-threaded JSON parsing support
 */
 class JsonQueue
 {
@@ -83,6 +84,8 @@ class JsonQueue
 * Class that reads in raw string into JSON
 * Devs are responsible for reading input into a string,
 * and passing it to this class, we take it from there
+* This class should own the only instance of JsonQueue (or share it between instances of itself)
+* In this way, you can have a bunch of Readers running on different threads to reduce latency
 */
 class JsonReader
 {

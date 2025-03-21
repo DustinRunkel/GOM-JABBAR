@@ -1,0 +1,27 @@
+{
+    "test_request" : [
+        [
+            {
+                "uuid" : 0,
+                "args" : [
+                    {
+                        "type" : "int",
+                        "value" : "10"
+                    },
+                    {
+                        "type" : "double",
+                        "value" : "2.2"
+                    },
+                    {
+                        "type" : "string",
+                        "value" : "Farmer Brown"
+                    }
+                ] 
+            },
+            {
+                "uuid" : 1,
+                "args" : []
+            }
+        ]
+    ]
+}
