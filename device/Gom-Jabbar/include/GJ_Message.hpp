@@ -80,8 +80,9 @@ namespace GJ
        private: 
            std::deque<std::atomic<Message>> incoming_;
            std::deque<std::atomic<Message>> outgoing_;
+           JsonReader jsonReader_;
        
-       public: 
+       public:
            /*
            * Overloadable message interface
            * User is required to provide a hardware specific
@@ -89,6 +90,8 @@ namespace GJ
            */
            virtual void send(const char * msg) = 0;
            /*
+           * Overloadable message receive function
+           * allows user to create board-specific implementations
            */
            virtual char * receive() = 0;
            /*
@@ -98,6 +101,24 @@ namespace GJ
            {
                 send(outgoing_.at(0).load().serialize());
                 outgoing_.pop_front();
+           }
+           /*
+           * Register this to an interrupt for when 
+           * whatever message buffer you have is full
+           * Will receive a message, and trigger the
+           * parser, which then puts the JSON document into the
+           * FILO queue
+           */
+           virtual void receive_incoming()
+           {
+                char * serialized_msg = receive();
+                if( serialized_msg == nullptr )
+                {//If you get here, your virtual message handler is busted.
+                    return;
+                }
+                jsonReader_.set(serialized_msg);
+                //message is pushed into the queue
+                jsonReader_.deserialize();
            }
        
        
