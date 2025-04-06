@@ -18,35 +18,27 @@
 #include <map>
 #include "GJ_Types.hpp"
 #include "GJ_Test.hpp"
+#include "GJ_Config.hpp"
 
 namespace GJ
 {
 class TestManager
 {
     private:
+        Config * config_ = nullptr;
+        TestManager(){};
     public:
+
+        TestManager(Config * config) : config_ (config){}
         std::map<unsigned int, ITest*> tests_;
         std::vector<unsigned int> tests_to_run;
-
-        /*
-        * Called to allow recovery from a critical state
-        * Will do nothing unless overriden by the user
-        */
-        virtual void critical_recovery(void){};
-
-        /*
-        * Overloadable instance that allows the disable of interupts during tests
-        * Leave this alone to leave interupts enabled
-        */
-        virtual void critical_section_start(void){};
-        virtual void critical_section_end(void){};
 
         /*
         * Run all tests in the specifed group
         */
         void run( void )
         {
-            critical_section_start();
+            config_->critical_section_start();
             for( auto t : tests_to_run )
             {
                 //Will run test and ALL args sent in
@@ -59,10 +51,10 @@ class TestManager
                     //TODO: add a message here that sends a failure message to the desktop
                     break;
                 }
-                critical_recovery();
+                config_->critical_recovery();
             }
-            critical_section_end();
-            
+            config_->critical_section_end();
+
         }
 
         //Todo: restrict this to the arg types of the function under test

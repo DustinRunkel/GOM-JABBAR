@@ -17,3 +17,4 @@
 set( jabbar_app_includes "${CMAKE_CURRENT_SOURCE_DIR}/include" CACHE STRING "App include path")
 
 add_subdirectory(source)
+add_subdirectory(config)

@@ -15,11 +15,12 @@
 # Where our interface library lives
 set( gj_includes "${CMAKE_CURRENT_SOURCE_DIR}" CACHE STRING "GJ include path")
 
-# Also make library compilation target here
-add_library( gom-jabbar INTERFACE )
+set(target gom_jabbar)
 
-target_link_libraries( gom-jabbar INTERFACE yyjson)
+add_library(${target} INTERFACE )
 
-target_include_directories( gom-jabbar INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} )
+target_link_libraries( ${target} INTERFACE yyjson gj_config)
 
-target_compile_options(gom-jabbar INTERFACE $<$<COMPILE_LANGUAGE:CXX>: -frtti>)
+target_include_directories( ${target} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+
+target_compile_options(${target} INTERFACE $<$<COMPILE_LANGUAGE:CXX>: -frtti>)
