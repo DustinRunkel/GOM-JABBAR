@@ -19,6 +19,4 @@ set(target gj_config)
 
 add_library(${target} INTERFACE)
 
-target_link_libraries(${target} INTERFACE pico_stdlib pico_cyw43_arch_none FreeRTOS-Kernel FreeRTOS-Kernel-Heap3 freertos_config gom_jabbar)
-
 target_include_directories(${target} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})

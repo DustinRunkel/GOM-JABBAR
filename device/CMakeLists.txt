@@ -22,7 +22,7 @@ project(GOM-JABBAR
 )
 
 # Optional flags section: will be important later
-option(BUILD_DEMO_APP ON "Builds the demo applicaiton for the RP2040W")
+option(BUILD_DEMO_APP ON "Builds the demo application for the RP2040W")
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_definitions(DEBUG)
@@ -34,12 +34,10 @@ pico_sdk_init()
 add_subdirectory(config)
 
 #We are working with ARM-CORTEX-M0+ architecture
-set(FREERTOS_PORT "GCC_ARM_CM0" )
+#set(FREERTOS_PORT "GCC_ARM_CM0" )
 
 #Todo: Make buildsystem flags for cross-compiling
 add_compile_definitions( configNUM_CORES=2 )
-
-add_subdirectory(Gom-Jabbar)
 
 if( BUILD_DEMO_APP )
         add_subdirectory(App)

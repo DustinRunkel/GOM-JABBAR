@@ -20,12 +20,12 @@ add_executable(${target} main.cpp)
 
 target_link_libraries(${target} PUBLIC pico_stdlib pico_cyw43_arch_none FreeRTOS-Kernel FreeRTOS-Kernel-Heap3 freertos_config gom_jabbar gj_config)
 
-target_include_directories(${target} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
+target_include_directories(${target} PUBLIC ${CMAKE_CURRENT_LIST_DIR} ../Gom-Jabbar/include ../config )
 
-target_compile_options(${target} PUBLIC "-fexceptions")
+#target_compile_options(${target} PUBLIC "-frtti")
 
 # Enable/disable STDIO via USB and UART
 pico_enable_stdio_usb(${target} 1)
-pico_enable_stdio_uart(${target} 0)
+pico_enable_stdio_uart(${target} 1)
 
 pico_add_extra_outputs( ${target} )

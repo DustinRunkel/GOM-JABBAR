@@ -126,7 +126,7 @@
 /* Memory allocation related definitions. */
 #define configSUPPORT_STATIC_ALLOCATION         0
 #define configSUPPORT_DYNAMIC_ALLOCATION        1
-#define configTOTAL_HEAP_SIZE                   (200000)
+#define configTOTAL_HEAP_SIZE                   (1024*128)
 #define configAPPLICATION_ALLOCATED_HEAP        0
 
 /* Hook function related definitions. */
@@ -160,6 +160,8 @@
 #define configNUM_CORES                         2
 #define configTICK_CORE                         0
 #define configRUN_MULTIPLE_PRIORITIES           0
+#define configNUMBER_OF_CORES                   2
+#define configUSE_PASSIVE_IDLE_HOOK             0
 
 /* RP2040 specific */
 #define configSUPPORT_PICO_SYNC_INTEROP         1

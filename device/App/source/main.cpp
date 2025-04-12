@@ -75,18 +75,13 @@ int main( void )
     * Instantiate your GOM-JABBAR params struct
     * a helper struct to make it easy to pass objects
     * to tasks
+    * We have tasks layed out in our library, but you can just use our components 
+    * And make your own if you want.
     */
     GJ::TaskParams * params;
     params->config_ = new Config();
     params->msgHandler = new GJ::MessageHandler(params->config_);
 
-    /*
-    * Our SDK allows us to set a callback function when a character is written to the device
-    * We can only be sure there is one character available when the callback is called, therefore
-    * we have to use this seemingly painful, but reliable method of reading in the characters one-by-one
-    * and constructing our json object in memory
-    */
-    stdio_set_chars_available_callback(on_char_received, (void*)params->config_);
     ( void ) xTaskCreate( ledTask,
                             "ledblink",
                             128,
