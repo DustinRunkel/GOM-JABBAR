@@ -23,6 +23,7 @@ project(GOM-JABBAR
 
 # Optional flags section: will be important later
 option(BUILD_DEMO_APP ON "Builds the demo application for the RP2040W")
+option(BUILD_TESTING ON "Build the tests")
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_definitions(DEBUG)
