@@ -18,7 +18,7 @@
 #include "GJ_Types.hpp"
 #include "yyjson.h"
 
-
+#include <string.h>
 #include <vector>
 
 namespace GJ
@@ -53,8 +53,7 @@ namespace GJ
             void deserialize()
             {
                 yyjson_read_err err_;
-                data_ = yyjson_read_opts((char *)serialized_, sizeof(serialized_), 0, NULL, &err_ );
-                
+                data_ = yyjson_read_opts((char *)serialized_, strlen(serialized_), 0, NULL, &err_ );
                 if(!data_)
                 {
                     char buffer[100];
@@ -71,34 +70,30 @@ namespace GJ
                 {
                     return;
                 }
-            
                 yyjson_val * root = yyjson_doc_get_root(data_);
                 yyjson_val * ptr;
                 ptr = yyjson_obj_get(root, "test_manifest" );
-                if(ptr)
+                if(ptr != nullptr)
                 {
                    type_ =  MANIFEST;
                    return;
                 }
-                ptr = yyjson_obj_get(root, "start_session" );
-                if(ptr)
+                ptr = yyjson_obj_get(root, "session_start" );
+                if(ptr != nullptr)
                 {
                     printf("SESSION START\n");
                    type_ = SESSION_START;
                    return;
                 }
                 ptr = yyjson_obj_get(root, "test_request" );
-                if(ptr)
+                if(ptr != nullptr)
                 {
                    type_ = TEST_REQUEST;
                    return;
                 }
             
-                if(ptr)
-                {
-                    type_ = UNKNOWN;
-                    return;
-                }
+                type_ = UNKNOWN;
+                return;
             }
     };
     /*
@@ -173,16 +168,10 @@ namespace GJ
                 {
                     return;
                 }
-                printf("Entering Queue\n");
                 Message * msg = new Message(config_->receive());
-                printf("Message created\n");
                 incoming_->push_back(msg);
-                printf("Message Queued\n");
-                //Populate msg internal json structure
-                //incoming_.back()->deserialize();
-                //printf("Message Deserialized\n");
+                incoming_->back()->deserialize();
                 incoming_->back()->set_type();
-                printf("Message type detected\n");
         
             }
    };
