@@ -20,7 +20,11 @@ class Config;
 
 namespace GJ 
 {
+<<<<<<< HEAD
     struct TaskParams
+=======
+    typedef struct TaskParams
+>>>>>>> main
     {
         ::Config * config_;
         MessageHandler * msgHandler;
