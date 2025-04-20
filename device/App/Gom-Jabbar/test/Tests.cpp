@@ -68,6 +68,25 @@ namespace GJ
         ASSERT_EQ(msg->type(), MessageType::SESSION_START);
 
     }
+
+    //Author: Hugo Sandoval
+    //Unit test: Testing a test request parsing from external platform
+    TEST_F(Tests, TestRequestTest)
+    {
+        //mock an incoming JSON message -- wrong type
+        Message * msg = new Message("{\"test_request\":1}");
+
+        //read into internal json doc
+        msg->deserialize();
+
+        //Detect type
+        msg->set_type();
+
+        EXPECT_EQ(msg->type(), MessageType::TEST_REQUEST);
+
+    }
+
+
 }
 
 int main(int argc, char **argv) {
