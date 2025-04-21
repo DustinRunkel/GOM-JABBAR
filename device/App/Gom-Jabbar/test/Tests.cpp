@@ -86,6 +86,29 @@ namespace GJ
 
     }
 
+    //Author: Luke Tyler
+    //Unit Test: Detect Manifest type from message
+    TEST_F(Tests, DetectsManifest) {
+        Message* msg = new Message(R"({"test_manifest":["a","b","c"]})");
+        msg->deserialize();
+        msg->set_type();
+        EXPECT_EQ(msg->type(), MessageType::MANIFEST);
+    }
+
+    //Author: Luke Tyler
+    //Unit Test: Verfiy that nothing gets lost between the deserialize() and serialize() function
+    TEST_F(Tests, MessageSerializationRoundTrip) {
+        // serialize() output must contain all the original fields
+        const char* raw = R"({"session_start":1,"foo":42})";
+        Message* msg = new Message(raw);
+        msg->deserialize();
+        msg->set_type();
+        const char* out = msg->serialize();
+        std::string s(out);
+        // Both keys should still be present in the serialized output
+        EXPECT_NE(s.find("session_start"), std::string::npos);
+        EXPECT_NE(s.find("foo"), std::string::npos);
+    }
 
 }
 
